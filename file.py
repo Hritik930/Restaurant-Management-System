@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 import random
+from datetime import datetime
+from tkinter import messagebox
 
 def main():
     win = Tk()
@@ -87,6 +89,16 @@ class Window2:
         
         calc_var = StringVar()
         
+        cust_nm = StringVar()
+        cust_cont = StringVar()
+        date = StringVar()
+        item_pur = StringVar()
+        item_qty = StringVar()
+        cost_one = StringVar()
+        
+        date.set(datetime.now())
+        
+        
         self.win.resizable(0,0)
         # =================================================
 
@@ -106,38 +118,58 @@ class Window2:
         self.cust_nm_lbl = Label(self.entry_frame, text="Customer Name :", font=("Arial", 15), bg="lightgrey")
         self.cust_nm_lbl.grid(row=1,column=0, padx=2, pady=2) 
         
-        self.cust_nm_ent = Entry(self.entry_frame, bd=5, textvariable=None,font=("Arial", 15) )
+        self.cust_nm_ent = Entry(self.entry_frame, bd=5, textvariable=cust_nm,font=("Arial", 15) )
         self.cust_nm_ent.grid(row=1,column=1, padx=2, pady=2)
         
         self.cust_cont_lbl = Label(self.entry_frame, text="Contact Number :", font=("Arial", 15), bg="lightgrey")
         self.cust_cont_lbl.grid(row=2,column=0, padx=2, pady=2)
         
-        self.cust_cont_ent = Entry(self.entry_frame, bd=5, textvariable=None,font=("Arial", 15) )
+        self.cust_cont_ent = Entry(self.entry_frame, bd=5, textvariable=cust_cont,font=("Arial", 15) )
         self.cust_cont_ent.grid(row=2,column=1, padx=2, pady=2)
         
         self.date_lbl = Label(self.entry_frame, text="Date :", font=("Arial", 15), bg="lightgrey")
         self.date_lbl.grid(row=3,column=0, padx=2, pady=2)
         
-        self.date_ent = Entry(self.entry_frame, bd=5, textvariable=None,font=("Arial", 15) )
+        self.date_ent = Entry(self.entry_frame, bd=5, textvariable=date,font=("Arial", 15) )
         self.date_ent.grid(row=3,column=1, padx=2, pady=2)
         
         self.item_pur_lbl = Label(self.entry_frame, text="Items Purchased :", font=("Arial", 15), bg="lightgrey")
         self.item_pur_lbl.grid(row=4,column=0, padx=2, pady=2)
         
-        self.item_pur_ent = Entry(self.entry_frame, bd=5, textvariable=None,font=("Arial", 15) )
+        self.item_pur_ent = Entry(self.entry_frame, bd=5, textvariable=item_pur,font=("Arial", 15) )
         self.item_pur_ent.grid(row=4,column=1, padx=2, pady=2)
         
         self.item_qty_lbl = Label(self.entry_frame, text="Item Quantity :", font=("Arial", 15), bg="lightgrey")
         self.item_qty_lbl.grid(row=5,column=0, padx=2, pady=2)
         
-        self.item_qty_ent = Entry(self.entry_frame, bd=5, textvariable=None,font=("Arial", 15) )
+        self.item_qty_ent = Entry(self.entry_frame, bd=5, textvariable=item_qty,font=("Arial", 15) )
         self.item_qty_ent.grid(row=5,column=1, padx=2, pady=2)
         
         self.cost_one_lbl = Label(self.entry_frame, text="Cost of One :", font=("Arial", 15), bg="lightgrey")
         self.cost_one_lbl.grid(row=6,column=0, padx=2, pady=2)
         
-        self.cost_one_ent = Entry(self.entry_frame, bd=5, textvariable=None,font=("Arial", 15) )
+        self.cost_one_ent = Entry(self.entry_frame, bd=5, textvariable=cost_one,font=("Arial", 15) )
         self.cost_one_ent.grid(row=6,column=1, padx=2, pady=2)
+        
+        # =============   Funcgtion ===================
+        
+        def default_bill():
+            self.bill_txt.insert(END,"\t\t\t\t  Ram Ki Rasoi")
+            self.bill_txt.insert(END,"\n\t\t\t Near Ram Janam Bhumi, Ayodhya")
+            self.bill_txt.insert(END,"\n\t\t\t     Contact - +919305200513")
+            self.bill_txt.insert(END,"\n ===============================================================================")
+            self.bill_txt.insert(END,f"\t\t Bill Number :{bill_no_tk.get()}")
+            
+        def genbill():
+            self.bill_txt.insert(END, f"\n Customer Name : {cust_nm.get()}")   
+            self.bill_txt.insert(END, f"\n Customer Contact : {cust_cont.get()}")   
+            self.bill_txt.insert(END, f"\n Date : {date.get()}")   
+            self.bill_txt.insert(END,"\n ===============================================================================")
+            
+            
+            
+        def add_pur():
+            pass
         
         # =============   Button ===================
         
@@ -147,7 +179,7 @@ class Window2:
         self.add_btn = Button(self.button_frame,bd=2, text="Add", font=('Arial',12), width=12, height=2)
         self.add_btn.grid(row=0, column=0, padx=4, pady=2)
         
-        self.generate_btn = Button(self.button_frame,bd=2, text="Generate", font=('Arial',12), width=12, height=2)
+        self.generate_btn = Button(self.button_frame,bd=2, text="Generate", font=('Arial',12), width=12, height=2, command=genbill)
         self.generate_btn.grid(row=0, column=1, padx=4, pady=2)
         
         self.clear_btn = Button(self.button_frame,bd=2, text="Clear", font=('Arial',12), width=12, height=2)
@@ -268,26 +300,13 @@ class Window2:
         self.bill_txt.pack(fill=BOTH, expand=TRUE)
         
         
-        
+        default_bill()
         
         
         # ========================================================================
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    11
 if __name__ == "__main__":
     
     main()
