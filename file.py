@@ -3,6 +3,8 @@ from tkinter import ttk
 import random
 from datetime import datetime
 from tkinter import messagebox
+import sys
+
 
 def main():
     win = Tk()
@@ -98,6 +100,8 @@ class Window2:
         
         date.set(datetime.now())
         
+        total_list = []
+        self.grd_total = 0
         
         self.win.resizable(0,0)
         # =================================================
@@ -165,34 +169,72 @@ class Window2:
             self.bill_txt.insert(END, f"\n Customer Contact : {cust_cont.get()}")   
             self.bill_txt.insert(END, f"\n Date : {date.get()}")   
             self.bill_txt.insert(END,"\n ===============================================================================")
+            self.bill_txt.insert(END,"\n Product Name\t\t\tQuantity\t\t\tPer Cost\t\t\tTotal ")
+            self.bill_txt.insert(END,"\n ===============================================================================")
             
+            self.add_btn.config(state="normal")
+            self.total_btn.config(state="normal")
+            self.save_btn.config(state="normal")
             
+        def clear_func():
+            cust_nm.set('')
+            cust_cont.set('')
+            item_pur.set("")
+            item_qty.set("")
+            cost_one.set("")
             
-        def add_pur():
-            pass
+        def reset_func():
+            total_list.clear()
+            self.grd_total = 0
+            self.add_btn.config(state="disabled")
+            self.total_btn.config(state="disabled")
+            self.save_btn.config(state="disabled")
+            self.bill_txt.delete("1.0",END)
+            default_bill()
+            
+        def add_func():
+            qty = int(item_qty.get())
+            cone = int(cost_one.get())
+            total = qty * cone
+            total_list.append(total)
+            self.bill_txt.insert(END,f"\n {item_pur.get()}\t\t\t{item_qty.get()}\t\t\t₹{cost_one.get()}\t\t\t₹{total} ")
+            # self.add_btn.config(state="disabled")
+            
+        def total_func():
+            for item in total_list:
+                self.grd_total = self.grd_total + item
+            self.bill_txt.insert(END,"\n ===============================================================================")
+            self.bill_txt.insert(END,f"\n\t\t\t\t\t\t\t Grand Total  : ₹{self.grd_total} ")
+            self.bill_txt.insert(END,"\n ===============================================================================")
+
+        
         
         # =============   Button ===================
         
         self.button_frame = LabelFrame(self.entry_frame,bd=5, text="Options", bg="lightgrey",font=("Arial", 15) ) 
         self.button_frame.place(x=20, y=280, width=385, height=300)
         
-        self.add_btn = Button(self.button_frame,bd=2, text="Add", font=('Arial',12), width=12, height=2)
+        self.add_btn = Button(self.button_frame,bd=2, text="Add", font=('Arial',12), width=12, height=2, command=add_func)
         self.add_btn.grid(row=0, column=0, padx=4, pady=2)
         
         self.generate_btn = Button(self.button_frame,bd=2, text="Generate", font=('Arial',12), width=12, height=2, command=genbill)
         self.generate_btn.grid(row=0, column=1, padx=4, pady=2)
         
-        self.clear_btn = Button(self.button_frame,bd=2, text="Clear", font=('Arial',12), width=12, height=2)
+        self.clear_btn = Button(self.button_frame,bd=2, text="Clear", font=('Arial',12), width=12, height=2, command=clear_func)
         self.clear_btn.grid(row=0, column=2, padx=4, pady=2)
         
-        self.total_btn = Button(self.button_frame,bd=2, text="Total", font=('Arial',12), width=12, height=2)
+        self.total_btn = Button(self.button_frame,bd=2, text="Total", font=('Arial',12), width=12, height=2, command=total_func)
         self.total_btn.grid(row=1, column=0, padx=4, pady=2)
         
-        self.reset_btn = Button(self.button_frame,bd=2, text="Reset", font=('Arial',12), width=12, height=2)
+        self.reset_btn = Button(self.button_frame,bd=2, text="Reset", font=('Arial',12), width=12, height=2, command=reset_func)
         self.reset_btn.grid(row=1, column=1, padx=4, pady=2)
         
         self.save_btn = Button(self.button_frame,bd=2, text="Save", font=('Arial',12), width=12, height=2)
         self.save_btn.grid(row=1, column=2, padx=4, pady=2)
+        
+        self.add_btn.config(state="disabled")
+        self.total_btn.config(state="disabled")
+        self.save_btn.config(state="disabled")
         
         # ===================================================
         
