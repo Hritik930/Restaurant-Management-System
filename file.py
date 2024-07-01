@@ -4,6 +4,7 @@ import random
 from datetime import datetime
 from tkinter import messagebox
 import sys
+import codecs
 
 
 def main():
@@ -161,20 +162,22 @@ class Window2:
             self.bill_txt.insert(END,"\t\t\t\t  Ram Ki Rasoi")
             self.bill_txt.insert(END,"\n\t\t\t Near Ram Janam Bhumi, Ayodhya")
             self.bill_txt.insert(END,"\n\t\t\t     Contact - +919305200513")
-            self.bill_txt.insert(END,"\n ===============================================================================")
-            self.bill_txt.insert(END,f"\t\t Bill Number :{bill_no_tk.get()}")
+            self.bill_txt.insert(END,"\n ================================================================================")
+            self.bill_txt.insert(END,f"\n Bill Number :{bill_no_tk.get()}")
             
         def genbill():
-            self.bill_txt.insert(END, f"\n Customer Name : {cust_nm.get()}")   
-            self.bill_txt.insert(END, f"\n Customer Contact : {cust_cont.get()}")   
-            self.bill_txt.insert(END, f"\n Date : {date.get()}")   
-            self.bill_txt.insert(END,"\n ===============================================================================")
-            self.bill_txt.insert(END,"\n Product Name\t\t\tQuantity\t\t\tPer Cost\t\t\tTotal ")
-            self.bill_txt.insert(END,"\n ===============================================================================")
+            if cust_nm.get() == "" or (cust_cont.get() == "" or len(cust_cont.get()) != 10):
+                messagebox.showerror("Error!","Please enter all the fields correctly.")
+            else:
+                self.bill_txt.insert(END, f"\n Customer Name : {cust_nm.get()}")   
+                self.bill_txt.insert(END, f"\n Customer Contact : {cust_cont.get()}")   
+                self.bill_txt.insert(END, f"\n Date : {date.get()}")   
+                self.bill_txt.insert(END,"\n ================================================================================")
+                self.bill_txt.insert(END,"\n Product Name\t\t         Quantity         \t\tPer Cost\t\t         Total ")
+                self.bill_txt.insert(END,"\n ================================================================================")
             
-            self.add_btn.config(state="normal")
-            self.total_btn.config(state="normal")
-            self.save_btn.config(state="normal")
+                self.add_btn.config(state="normal")
+                self.total_btn.config(state="normal")
             
         def clear_func():
             cust_nm.set('')
@@ -193,21 +196,39 @@ class Window2:
             default_bill()
             
         def add_func():
-            qty = int(item_qty.get())
-            cone = int(cost_one.get())
-            total = qty * cone
-            total_list.append(total)
-            self.bill_txt.insert(END,f"\n {item_pur.get()}\t\t\t{item_qty.get()}\t\t\t₹{cost_one.get()}\t\t\t₹{total} ")
-            # self.add_btn.config(state="disabled")
+            if item_pur.get() == "" or item_qty.get() == "":
+                messagebox.showerror("Error!","Please enter all the fields correctly.")
+            else:
+                qty = int(item_qty.get())
+                cone = int(cost_one.get())
+                total = qty * cone
+                total_list.append(total)
+                self.bill_txt.insert(END,f"\n {item_pur.get()}\t\t          {item_qty.get()}\t\t            ₹{cost_one.get()}\t\t              ₹{total} ")
+            
             
         def total_func():
             for item in total_list:
                 self.grd_total = self.grd_total + item
-            self.bill_txt.insert(END,"\n ===============================================================================")
+            self.bill_txt.insert(END,"\n ================================================================================")
             self.bill_txt.insert(END,f"\n\t\t\t\t\t\t\t Grand Total  : ₹{self.grd_total} ")
-            self.bill_txt.insert(END,"\n ===============================================================================")
+            self.bill_txt.insert(END,"\n ================================================================================")
+            self.save_btn.config(state="normal")
+            
 
-        
+        def save_func():
+            user_choice = messagebox.askyesno("Confirm",f"Do you want to save the bill {bill_no_tk.get()}", parent=self.win)
+            if user_choice > 0:
+                self.bill_content = self.bill_txt.get("1.0",END)
+                try:
+                    con = open(f"{sys.path[0]}/bills/" + str(bill_no_tk.get()) + ".txt","w")
+                except Exception as e:
+                    messagebox.showerror("Error",f"Error : {e}", parent=self.win)
+                con.write(self.bill_content)
+                con.close()
+                messagebox.showinfo("Success!",f"Bill {bill_no_tk.get()} has been saved successfully!", parent = self.win)
+            else:
+                return
+               
         
         # =============   Button ===================
         
@@ -229,7 +250,7 @@ class Window2:
         self.reset_btn = Button(self.button_frame,bd=2, text="Reset", font=('Arial',12), width=12, height=2, command=reset_func)
         self.reset_btn.grid(row=1, column=1, padx=4, pady=2)
         
-        self.save_btn = Button(self.button_frame,bd=2, text="Save", font=('Arial',12), width=12, height=2)
+        self.save_btn = Button(self.button_frame,bd=2, text="Save", font=('Arial',12), width=12, height=2, command=save_func)
         self.save_btn.grid(row=1, column=2, padx=4, pady=2)
         
         self.add_btn.config(state="disabled")
